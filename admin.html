@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Administrativo | Belle Cílios</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="img/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<!-- ===== AVISO SEM FIREBASE ===== -->
+<div class="admin-warning" id="firebaseWarning" hidden>
+  ⚠️ O Firebase ainda não foi configurado neste site. O painel não funciona sem isso.
+  Veja o arquivo <strong>CONFIGURAR-FIREBASE.md</strong> na pasta do site para o passo a passo.
+</div>
+
+<!-- ===== LOGIN ===== -->
+<section class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <img src="img/logo.jpeg" alt="Belle Cílios" class="login-logo">
+    <h1>Área da Administradora</h1>
+    <p class="login-sub">Entre com seu e-mail e senha para gerenciar o catálogo.</p>
+
+    <form id="loginForm" class="login-form">
+      <label>
+        E-mail
+        <input type="email" id="loginEmail" required autocomplete="username">
+      </label>
+      <label>
+        Senha
+        <input type="password" id="loginPassword" required autocomplete="current-password">
+      </label>
+      <p class="login-error" id="loginError"></p>
+      <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+
+    <a href="index.html" class="back-link">← Voltar ao site</a>
+  </div>
+</section>
+
+<!-- ===== DASHBOARD ===== -->
+<section class="dashboard" id="dashboard" hidden>
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <img src="img/logo.jpeg" alt="Belle Cílios" class="dash-logo">
+      <div>
+        <h1>Catálogo</h1>
+        <p>Gerencie os produtos que aparecem no site.</p>
+      </div>
+      <a href="index.html" class="btn btn-outline" target="_blank" rel="noopener">Ver site</a>
+      <button type="button" id="logoutBtn" class="btn btn-outline">Sair</button>
+    </div>
+  </header>
+
+  <div class="dash-body">
+
+    <div class="admin-warning" id="syncError" hidden></div>
+
+    <div class="empty-state" id="emptyMsg" hidden>
+      <p>Preparando seu catálogo pela primeira vez, um segundo…</p>
+    </div>
+
+    <!-- ===== FORM ===== -->
+    <div class="admin-panel">
+      <h2 id="formTitle">Adicionar novo produto</h2>
+      <form id="productForm" class="product-form">
+        <div class="form-row">
+          <label>
+            Nome do produto
+            <input type="text" id="fieldNome" placeholder="Ex: Volume Natural" required>
+          </label>
+          <label class="field-sm">
+            Emoji
+            <input type="text" id="fieldEmoji" placeholder="✨" maxlength="4">
+          </label>
+        </div>
+
+        <label>
+          Foto do produto (opcional)
+          <input type="file" id="fieldImagemArquivo" accept="image/*">
+          <span class="field-hint">Escolha uma foto da galeria ou tire uma na hora, pelo celular ou computador. Deixe em branco para usar um ícone no lugar.</span>
+        </label>
+        <div class="image-preview-wrap">
+          <img id="imagemPreview" class="image-preview" alt="Prévia da foto" hidden>
+          <button type="button" id="removeImagemBtn" class="btn btn-outline btn-sm" hidden>Remover foto</button>
+        </div>
+
+        <div class="form-row">
+          <label class="field-sm">
+            Preço (R$)
+            <input type="number" id="fieldPreco" step="0.01" min="0" placeholder="17.99" required>
+          </label>
+          <label class="field-sm">
+            Status
+            <select id="fieldStatus">
+              <option value="disponivel">Disponível</option>
+              <option value="esgotado">Esgotado</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-row checks">
+          <label class="check-label">
+            <input type="checkbox" id="fieldPromocao"> Está em promoção
+          </label>
+          <label class="check-label">
+            <input type="checkbox" id="fieldAcessorio"> É acessório (cola, kit, etc)
+          </label>
+        </div>
+
+        <label id="precoAntigoWrap" hidden>
+          Preço antigo (R$) — mostrado riscado
+          <input type="number" id="fieldPrecoAntigo" step="0.01" min="0" placeholder="17.99">
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Salvar produto</button>
+          <button type="button" id="cancelEditBtn" class="btn btn-outline" hidden>Cancelar edição</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===== LISTA ===== -->
+    <div class="admin-list" id="adminList"></div>
+  </div>
+</section>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/products-data.js"></script>
+<script src="js/products-store.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
