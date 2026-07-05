@@ -482,7 +482,67 @@ em{font-style:italic;color:var(--pink-500)}
   .footer-inner{grid-template-columns:1fr;gap:36px}
   .steps{flex-direction:column;gap:40px}
   .sobre-tag{left:12px;bottom:-16px;font-size:.75rem;padding:10px 16px}
-  .brand-logo{height:64px;width:70px}
+
+  /* header/logo menores para não brigar com o menu */
+  .header{padding:12px 0}
+  .header.scrolled{padding:8px 0}
+  .brand-logo{height:48px;width:52px}
+
+  /* hero mais compacto */
+  .hero{padding-top:90px;padding-bottom:40px;min-height:auto}
+  .hero-title{font-size:clamp(1.9rem,8vw,2.4rem);margin-bottom:16px}
+  .hero-desc{font-size:.95rem;margin-bottom:24px}
+  .eyebrow{font-size:.72rem;padding:6px 14px;margin-bottom:16px}
+  .hero-actions{margin-bottom:32px;gap:12px}
+  .hero-stats{gap:24px}
+  .stat strong{font-size:1.5rem}
+  .stat span{font-size:.72rem}
+  .hero-visual{height:280px}
+  .hero-card{border-width:4px}
+  .hero-card-float{width:96px;height:96px}
+  .hero-card-2{width:80px;height:80px}
+  .badge-float{padding:8px 14px;font-size:.68rem;bottom:4%;right:2%}
+
+  .btn{padding:12px 22px;font-size:.85rem}
+  .btn-lg{padding:13px 26px;font-size:.9rem}
+
+  /* seções com respiro menor */
+  .sobre{padding:70px 0}
+  .diferenciais{padding:20px 0 60px}
+  .catalogo{padding:60px 0}
+  .como-funciona{padding:70px 0}
+  .depoimentos{padding:70px 0}
+  .cta-final{padding:60px 0}
+  .footer{padding:56px 0 0}
+
+  .section-title{font-size:clamp(1.5rem,6vw,2rem)}
+  .section-head{margin-bottom:32px}
+
+  .diff-card{padding:24px 18px}
+  .diff-icon{font-size:1.8rem;margin-bottom:10px}
+  .diff-card h3{font-size:1.05rem}
+
+  .step-num{font-size:2rem;margin-bottom:8px}
+  .step h3{font-size:1.1rem}
+
+  .testimonial-card{padding:22px 18px}
+  .testimonial-card::before{font-size:2.6rem}
+
+  /* catálogo em 2 colunas, imagens menores */
+  .product-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .product-info{padding:12px 14px;gap:5px}
+  .product-info h4{font-size:.88rem}
+  .price-new{font-size:1.05rem}
+  .price-old{font-size:.7rem}
+  .product-buy{padding:9px;font-size:.72rem;margin-top:8px}
+  .product-badge{font-size:.62rem;padding:5px 10px}
+
+  .footer-logo{height:46px;width:46px}
+  .whatsapp-float{width:50px;height:50px;bottom:18px;right:18px}
+}
+
+@media (max-width:420px){
+  .product-grid{grid-template-columns:1fr;gap:18px}
 }
 
 .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
