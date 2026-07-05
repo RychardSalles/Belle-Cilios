@@ -86,6 +86,17 @@ function watchAuthState(){
 // editáveis e excluíveis desde o primeiro segundo.
 let seedEmAndamento = false;
 
+// Sem internet (ou conexão instável), o Firestore aplica a mudança na tela de quem
+// editou na hora, mas só entrega pros outros dispositivos quando a gravação realmente
+// chegar ao servidor — o que só acontece quando a conexão voltar. Como isso não gera
+// nenhum erro (só demora), avisamos a administradora se a gravação estiver demorando
+// mais que o normal, pra ela saber que precisa manter a página aberta até sincronizar.
+function aguardarComAvisoDeConexao(promise, avisar, ms = 4000){
+  let terminou = false;
+  const timer = setTimeout(() => { if(!terminou) avisar(); }, ms);
+  return promise.finally(() => { terminou = true; clearTimeout(timer); });
+}
+
 function startProductsListener(){
   unsubscribeProducts = subscribeProducts(async (products, erro) => {
     currentProducts = products;
@@ -94,10 +105,12 @@ function startProductsListener(){
     const banner = document.getElementById("syncError");
     if(erro){
       banner.hidden = false;
+      banner.classList.remove("pending");
       banner.textContent = `Não foi possível sincronizar com o Firestore agora (mostrando catálogo local): ${erro.message || erro.code || erro}`;
       return;
     }
     banner.hidden = true;
+    banner.classList.remove("pending");
 
     const isEmptyCloud = products === FALLBACK_PRODUCTS;
     if(isEmptyCloud && !seedEmAndamento){
@@ -149,11 +162,24 @@ function renderAdminList(products){
       const id = el.dataset.toggleId;
       const product = currentProducts.find(p => p.id === id);
       const novoStatus = el.checked ? "disponivel" : "esgotado";
+      const banner = document.getElementById("syncError");
+      el.disabled = true;
       try{
-        await updateProduct(id, { status: novoStatus, tags: rebuildTags(novoStatus, product.tags) });
+        await aguardarComAvisoDeConexao(
+          updateProduct(id, { status: novoStatus, tags: rebuildTags(novoStatus, product.tags) }),
+          () => {
+            banner.hidden = false;
+            banner.classList.add("pending");
+            banner.textContent = "Sem conexão com a internet no momento. Não feche esta página — a alteração será enviada assim que a conexão voltar.";
+          }
+        );
+        banner.hidden = true;
+        banner.classList.remove("pending");
       }catch(err){
         alert("Erro ao atualizar: " + err.message);
         el.checked = !el.checked;
+      }finally{
+        el.disabled = false;
       }
     });
   });
@@ -283,17 +309,30 @@ function bindForm(){
     const img = pendingImg !== undefined ? pendingImg : fotoAtual;
 
     const data = { nome, emoji, img, preco, precoAntigo, status, tags };
+    const banner = document.getElementById("syncError");
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const textoOriginalBtn = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Salvando...";
 
     try{
-      if(editingId){
-        await updateProduct(editingId, data);
-      }else{
-        const maiorOrdem = currentProducts.reduce((max, p) => Math.max(max, p.ordem || 0), 0);
-        await addProduct({ ...data, ordem: maiorOrdem + 1 });
-      }
+      const operacao = editingId
+        ? updateProduct(editingId, data)
+        : addProduct({ ...data, ordem: currentProducts.reduce((max, p) => Math.max(max, p.ordem || 0), 0) + 1 });
+
+      await aguardarComAvisoDeConexao(operacao, () => {
+        banner.hidden = false;
+        banner.classList.add("pending");
+        banner.textContent = "Sem conexão com a internet no momento. Não feche esta página — o produto será salvo assim que a conexão voltar.";
+      });
+      banner.hidden = true;
+      banner.classList.remove("pending");
       resetForm();
     }catch(err){
       alert("Erro ao salvar: " + err.message);
+    }finally{
+      submitBtn.disabled = false;
+      submitBtn.textContent = textoOriginalBtn;
     }
   });
 
