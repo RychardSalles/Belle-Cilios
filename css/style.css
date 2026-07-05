@@ -127,7 +127,7 @@ em{font-style:italic;color:var(--pink-500)}
   box-shadow:0 8px 30px -15px rgba(36,20,25,.15);
 }
 .header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
-.brand-logo{height:68px;width:68px;object-fit:cover;border-radius:50%;border:2px solid var(--gold-400);transition:transform .4s ease}
+.brand-logo{height:84px;width:84px;object-fit:cover;border-radius:50%;border:2px solid var(--gold-400);transition:transform .4s ease}
 .brand:hover .brand-logo{transform:rotate(8deg) scale(1.05)}
 .nav{display:flex;gap:32px}
 .nav-link{
