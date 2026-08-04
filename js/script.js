@@ -5,7 +5,7 @@
 const WHATSAPP_NUMBER = "5511978869996";
 
 function buildWhatsappLink(productName){
-  const msg = `Oi, Belle Cílios! Tenho interesse no modelo "${productName}" ✨ Pode me passar mais informações?`;
+  const msg = `Oi, Belle Cílios! Tenho interesse no modelo "${productName}". Pode me passar mais informações?`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
